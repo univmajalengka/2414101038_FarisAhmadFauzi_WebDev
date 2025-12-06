@@ -1,0 +1,80 @@
+========================================================================
+DOKUMENTASI ANALISIS ERROR
+TUGAS 3 
+========================================================================
+
+------------------------------------------------------------------------
+1. ERROR KONEKSI DATABASE (CONFIGURATION ERROR)
+------------------------------------------------------------------------
+* Pesan Error: 
+  Fatal error: Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: YES)...
+
+* Jenis Error: 
+  Configuration / Runtime Error.
+
+* Letak File: 
+  koneksi.php (Baris 5).
+
+* Penyebab: 
+  Variabel `$password` diisi dengan string "12345", sedangkan konfigurasi default user 'root' pada server lokal (Laragon) tidak menggunakan password (kosong). Selain itu, nama database pada variabel `$nama_database` seringkali tidak sesuai dengan database yang dibuat pengguna.
+
+* Perbaikan: 
+  Mengosongkan variabel password dan menyesuaikan nama database.
+  Code: $password = "";
+
+------------------------------------------------------------------------
+2. ERROR SYNTAX PHP (PARSE ERROR)
+------------------------------------------------------------------------
+* Pesan Error: 
+  Parse error: syntax error, unexpected token "=", expecting variable...
+
+* Jenis Error: 
+  Syntax Error.
+
+* Letak File: 
+  proses-pendaftaran-2.php (Baris 13).
+
+* Penyebab: 
+  Penulisan variabel tidak diawali dengan tanda dolar ($). Tertulis `sekolah = $_POST[...]`
+
+* Perbaikan: 
+  Menambahkan tanda dolar ($) sebelum nama variabel.
+  Code: $sekolah = $_POST['sekolah_asal'];
+
+------------------------------------------------------------------------
+3. ERROR PENULISAN HTML (SYNTAX ERROR)
+------------------------------------------------------------------------
+* Pesan Error: 
+  (Tidak ada pesan fatal).
+
+* Jenis Error: 
+  HTML Syntax Error.
+
+* Letak File: 
+  form-daftar.php (Baris 1).
+
+* Penyebab: 
+  Deklarasi Doctype tidak valid tertulis `<DOCTYPE >`.
+
+* Perbaikan: 
+  Mengubah menjadi deklarasi HTML5 yang standar.
+  Code: <!DOCTYPE html>
+
+------------------------------------------------------------------------
+4. KESALAHAN QUERY SQL & KEAMANAN (SYNTAX & SECURITY)
+------------------------------------------------------------------------
+* Jenis Error: 
+  SQL Syntax & Security Vulnerability.
+
+* Letak File: 
+  proses-pendaftaran-2.php (Baris Query Insert).
+
+* Penyebab 1 (Typo SQL): 
+  Menggunakan kata kunci `VALUE` (singular), standar SQL yang umum adalah `VALUES` (plural). 
+
+* Penyebab 2 (Security - SQL Injection): 
+  Menggunakan "Direct Query" dimana input user digabungkan langsung ke string SQL (`VALUES ('$nama'...)`). Ini membuka celah keamanan SQL Injection.
+
+* Perbaikan: 
+  Memperbaiki syntax menjadi `VALUES` dan mengimplementasikan "Prepared Statements" menggunakan `mysqli_stmt_bind_param` untuk keamanan data.
+
